@@ -1,6 +1,7 @@
 package com.dexer125;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class Main {
@@ -27,7 +28,7 @@ public class Main {
             //Read file line by line
             reader = new BufferedReader(new FileReader(path));
             //Write to output file
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outPath + "output.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outPath + "outputTemp.txt"));
             String line = reader.readLine();
             while (line != null) {
 
@@ -72,6 +73,38 @@ public class Main {
             e.printStackTrace();
         }
 
+        try {
+            // Code for duplicate line removing
+            System.out.println("Removing duplicates...");
+            PrintWriter printWriter = new PrintWriter(outPath + "output.txt");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(outPath + "outputTemp.txt"));
+            String line = bufferedReader.readLine();
+
+            HashSet<String> hashSet = new HashSet<String>();
+
+            while (line != null){
+
+                // Write only if not present in hashset
+                if (hashSet.add(line)){
+                    printWriter.println(line);
+                }
+                line = bufferedReader.readLine();
+            }
+
+            printWriter.flush();
+            bufferedReader.close();
+            printWriter.close();
+            File tempFile = new File(outPath + "outputTemp.txt");
+            if (tempFile.delete()){
+                System.out.println("Temporary file removed.");
+            }
+            System.out.println("Duplicates removed.");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
         }
 
     }
+/* Coded by Dexer125 */
