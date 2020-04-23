@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="SELinux Denials tool:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/SELinux_Denials_tool_jar</output-path>
+  <artifact type="jar" name="SELinuxDenialsTool:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SELinuxDenialsTool_jar</output-path>
     <root id="archive" name="SELinux Denials tool.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
