@@ -27,11 +27,27 @@ public class Main {
             String line = reader.readLine();
             while (line != null) {
 
-                if (line.contains("avc: denied")){
+                if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:")){
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
                     tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
+                    tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
+                    output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
+
+                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+
+                    writer.write(output);
+                    writer.newLine();
+                    writer.flush();
+
+                }
+
+                else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:")){
+
+                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
