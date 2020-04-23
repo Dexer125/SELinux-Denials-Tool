@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+        //Initialize values
         BufferedReader reader;
         String path;
         String outPath;
@@ -15,6 +16,7 @@ public class Main {
         String tclass;
         String output;
 
+        //Ask for paths
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the path to log file: ");
         path = scanner.nextLine();
@@ -22,7 +24,9 @@ public class Main {
         outPath = scanner.nextLine();
 
         try {
+            //Read file line by line
             reader = new BufferedReader(new FileReader(path));
+            //Write to output file
             BufferedWriter writer = new BufferedWriter(new FileWriter(outPath + "output.txt"));
             String line = reader.readLine();
             while (line != null) {
@@ -43,6 +47,7 @@ public class Main {
 
                 }
 
+                //AVC log contains two types of tcontext
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:")){
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
