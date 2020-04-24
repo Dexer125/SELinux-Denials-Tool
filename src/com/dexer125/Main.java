@@ -35,7 +35,7 @@ public class Main {
                 if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:")){
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
-                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
                     tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
@@ -52,7 +52,7 @@ public class Main {
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:")){
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
-                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
@@ -69,7 +69,8 @@ public class Main {
             }
             writer.close();
             reader.close();
-        } catch (IOException e) {
+        } catch (StringIndexOutOfBoundsException | IOException e) {
+            System.out.println("Exception occured...");
             e.printStackTrace();
         }
 
