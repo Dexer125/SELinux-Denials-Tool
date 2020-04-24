@@ -36,7 +36,7 @@ public class Main {
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
-                    tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(" tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
@@ -53,7 +53,7 @@ public class Main {
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
-                    tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(" tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
