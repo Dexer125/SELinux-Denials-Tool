@@ -32,11 +32,11 @@ public class Main {
             String line = reader.readLine();
             while (line != null) {
 
-                if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:")){
+                if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:") && !line.contains(":s0:")){
 
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
-                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
-                    tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(" tclass"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
@@ -49,8 +49,37 @@ public class Main {
                 }
 
                 //AVC log contains two types of tcontext
-                else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:")){
+                else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && !line.contains(":s0:")){
 
+                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
+                    tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
+                    output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
+
+                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+
+                    writer.write(output);
+                    writer.newLine();
+                    writer.flush();
+
+                }
+                //Prevent errors because of :s0:
+                else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && line.contains(":s0:") && line.contains(":s0 tclass")){
+                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
+                    tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
+                    output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
+
+                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+
+                    writer.write(output);
+                    writer.newLine();
+                    writer.flush();
+                }
+
+                else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && line.contains(":s0:") && !line.contains(":s0 tclass")){
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(" tclass"));
@@ -62,15 +91,13 @@ public class Main {
                     writer.write(output);
                     writer.newLine();
                     writer.flush();
-
                 }
 
                 line = reader.readLine();
             }
             writer.close();
             reader.close();
-        } catch (StringIndexOutOfBoundsException | IOException e) {
-            System.out.println("Exception occured...");
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -105,7 +132,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        }
-
     }
+
+}
+
 /* Coded by Dexer125 */
