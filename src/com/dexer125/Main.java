@@ -67,8 +67,22 @@ public class Main {
                 //Prevent errors because of :s0:
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && line.contains(":s0:") && line.contains(":s0 tclass")){
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
-                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
+                    tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
+                    output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
+
+                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+
+                    writer.write(output);
+                    writer.newLine();
+                    writer.flush();
+                }
+
+                else if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:") && line.contains(":s0:") && line.contains(":s0 tclass")){
+                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
@@ -81,16 +95,41 @@ public class Main {
 
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && line.contains(":s0:") && !line.contains(":s0 tclass")){
                     command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
-                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(" tcontext"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(" tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
-
-                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+                    // Delete unwanted characters in output
+                    if (output.contains(":s0:")){
+                        String delete = output.substring(output.indexOf(":s0:"), output.indexOf(";")+1);
+                        output = output.replace(delete, "");
+                        output = output + ":" + tclass + command + ";";
+                    }
+                    System.out.println(output);
 
                     writer.write(output);
                     writer.newLine();
                     writer.flush();
+                }
+
+                else if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:") && line.contains(":s0:") && !line.contains(":s0 tclass")){
+                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
+                    tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(" tclass"));
+                    tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
+                    output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
+
+                    if (output.contains(":s0:")){
+                        String delete = output.substring(output.indexOf(":s0:"), output.indexOf(";")+1);
+                        output = output.replace(delete, "");
+                        output = output + ":" + tclass + command + ";";
+                    }
+                    System.out.println(output);
+
+                    writer.write(output);
+                    writer.newLine();
+                    writer.flush();
+
                 }
 
                 line = reader.readLine();
