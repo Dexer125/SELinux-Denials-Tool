@@ -16,6 +16,7 @@ public class Main {
         String tcontext;
         String tclass;
         String output;
+        int count = 0;
 
         //Ask for paths
         Scanner scanner = new Scanner(System.in);
@@ -43,6 +44,7 @@ public class Main {
                     System.out.println(output);
 
                     writer.write(output);
+                    count++;
                     writer.newLine();
                     writer.flush();
 
@@ -60,6 +62,7 @@ public class Main {
                     System.out.println(output);
 
                     writer.write(output);
+                    count++;
                     writer.newLine();
                     writer.flush();
 
@@ -75,6 +78,7 @@ public class Main {
                     System.out.println(output);
 
                     writer.write(output);
+                    count++;
                     writer.newLine();
                     writer.flush();
                 }
@@ -89,6 +93,7 @@ public class Main {
                     System.out.println(output);
 
                     writer.write(output);
+                    count++;
                     writer.newLine();
                     writer.flush();
                 }
@@ -108,6 +113,7 @@ public class Main {
                     System.out.println(output);
 
                     writer.write(output);
+                    count++;
                     writer.newLine();
                     writer.flush();
                 }
@@ -127,6 +133,7 @@ public class Main {
                     System.out.println(output);
 
                     writer.write(output);
+                    count++;
                     writer.newLine();
                     writer.flush();
 
@@ -136,42 +143,57 @@ public class Main {
             }
             writer.close();
             reader.close();
+
+            if (count > 0){
+                System.out.println("Temporary file created");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            // Code for duplicate line removing
-            System.out.println("Removing duplicates...");
-            PrintWriter printWriter = new PrintWriter(outPath + "output.txt");
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(outPath + "outputTemp.txt"));
-            String line = bufferedReader.readLine();
-
-            HashSet<String> hashSet = new HashSet<String>();
-
-            while (line != null){
-
-                // Write only if not present in hashset
-                if (hashSet.add(line)){
-                    printWriter.println(line);
-                }
-                line = bufferedReader.readLine();
-            }
-
-            printWriter.flush();
-            bufferedReader.close();
-            printWriter.close();
+        // Prevent from running duplicates removing if no denials in log
+        if (count == 0){
+            System.out.println("No denials in log file, check if your kernel supports audit logging.");
             File tempFile = new File(outPath + "outputTemp.txt");
-            if (tempFile.delete()){
-                System.out.println("Temporary file removed.");
+            tempFile.delete();
+        }
+        else {
+
+            try {
+                // Code for duplicate line removing
+                System.out.println("Removing duplicates...");
+                PrintWriter printWriter = new PrintWriter(outPath + "output.txt");
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(outPath + "outputTemp.txt"));
+                String line = bufferedReader.readLine();
+
+                HashSet<String> hashSet = new HashSet<String>();
+
+                while (line != null){
+
+                    // Write only if not present in hashset
+                    if (hashSet.add(line)){
+                        printWriter.println(line);
+                    }
+                    line = bufferedReader.readLine();
+                }
+
+                printWriter.flush();
+                bufferedReader.close();
+                printWriter.close();
+                File tempFile = new File(outPath + "outputTemp.txt");
+                if (tempFile.delete()){
+                    System.out.println("Temporary file removed.");
+                }
+                System.out.println("Duplicates removed.");
             }
-            System.out.println("Duplicates removed.");
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+            catch (IOException e){
+                e.printStackTrace();
+            }
 
     }
+
+}
 
 }
 
