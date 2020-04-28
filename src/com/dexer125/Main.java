@@ -40,7 +40,7 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+                    System.out.println(output);
 
                     writer.write(output);
                     writer.newLine();
@@ -57,7 +57,7 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+                    System.out.println(output);
 
                     writer.write(output);
                     writer.newLine();
@@ -72,7 +72,7 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+                    System.out.println(output);
 
                     writer.write(output);
                     writer.newLine();
@@ -86,7 +86,7 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println("allow " + scontext + " " + tcontext + ":" + tclass + command + ";");
+                    System.out.println(output);
 
                     writer.write(output);
                     writer.newLine();
