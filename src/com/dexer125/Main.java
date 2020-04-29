@@ -25,7 +25,8 @@ public class Main {
         System.out.println("Enter the output path: ");
         outPath = scanner.nextLine();
 
-        if (outPath.substring(outPath.length() - 1) != "/"){
+        // Make sure that "/" is always at the end of the path
+        if (!outPath.endsWith("/")){
             outPath += "/";
         }
         try {
@@ -33,12 +34,13 @@ public class Main {
             reader = new BufferedReader(new FileReader(path));
             //Write to output file
             BufferedWriter writer = new BufferedWriter(new FileWriter(outPath + "outputTemp.txt"));
-            String line = reader.readLine();
+            String line;
+            line = reader.readLine();
+
             while (line != null) {
 
                 if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:") && !line.contains(":s0:")){
-
-                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    command  = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
                     tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
@@ -54,9 +56,8 @@ public class Main {
                 }
 
                 //AVC log contains two types of tcontext
-                else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && !line.contains(":s0:")){
-
-                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                else if (line.contains("avc: denied") && line.contains("tcontext=u:r:") && !line.contains(":s0:")){
+                    command  = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0 tcontext"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
@@ -72,7 +73,7 @@ public class Main {
                 }
                 //Prevent errors because of :s0:
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && line.contains(":s0:") && line.contains(":s0 tclass")){
-                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    command  = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
@@ -87,7 +88,7 @@ public class Main {
                 }
 
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:") && line.contains(":s0:") && line.contains(":s0 tclass")){
-                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    command  = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
                     tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
@@ -102,15 +103,15 @@ public class Main {
                 }
 
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:r:") && line.contains(":s0:") && !line.contains(":s0 tclass")){
-                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    command  = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
                     tcontext = line.substring(line.indexOf("tcontext=u:r:")+13, line.indexOf(" tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
+
                     // Delete unwanted characters in output
                     if (output.contains(":s0:")){
-                        String delete = output.substring(output.indexOf(":s0:"), output.indexOf(";")+1);
-                        output = output.replace(delete, "");
+                        output = output.replace(output.substring(output.indexOf(":s0:"), output.indexOf(";")+1), "");
                         output = output + ":" + tclass + command + ";";
                     }
                     System.out.println(output);
@@ -122,15 +123,14 @@ public class Main {
                 }
 
                 else if (line.contains("avc: denied")&& line.contains("tcontext=u:object_r:") && line.contains(":s0:") && !line.contains(":s0 tclass")){
-                    command = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
+                    command  = line.substring(line.indexOf("denied")+7, line.indexOf(" for"));
                     scontext = line.substring(line.indexOf("scontext=u:r:")+13, line.indexOf(":s0:"));
                     tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(" tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
                     if (output.contains(":s0:")){
-                        String delete = output.substring(output.indexOf(":s0:"), output.indexOf(";")+1);
-                        output = output.replace(delete, "");
+                        output = output.replace(output.substring(output.indexOf(":s0:"), output.indexOf(";")+1), "");
                         output = output + ":" + tclass + command + ";";
                     }
                     System.out.println(output);
@@ -146,9 +146,6 @@ public class Main {
             }
             writer.close();
             reader.close();
-            if (count > 0){
-                System.out.println("\nTemporary file created");
-            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -158,9 +155,11 @@ public class Main {
         if (count == 0){
             System.out.println("No denials in log file, check if your kernel supports audit logging.");
             File tempFile = new File(outPath + "outputTemp.txt");
-            tempFile.delete();
+            if (tempFile.delete()){System.out.println("No files created.");}
         }
         else {
+
+            System.out.println("\nTemporary file created");
 
             try {
                 // Code for duplicate line removing
@@ -169,7 +168,7 @@ public class Main {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(outPath + "outputTemp.txt"));
                 String line = bufferedReader.readLine();
 
-                HashSet<String> hashSet = new HashSet<String>();
+                HashSet<String> hashSet = new HashSet<>();
 
                 while (line != null){
 
@@ -188,6 +187,7 @@ public class Main {
                     System.out.println("Temporary file removed.");
                 }
                 System.out.println("Duplicates removed.");
+                if (outPath.contains("//")){outPath = outPath.replace("//", "/");}
                 System.out.println("\nYou can find your fixed denials under " + outPath + "output.txt");
                 System.out.println("\nTool by @Dexer125");
             }
@@ -195,9 +195,9 @@ public class Main {
                 e.printStackTrace();
             }
 
-    }
+        }
 
-}
+    }
 
 }
 
