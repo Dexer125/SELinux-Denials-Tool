@@ -25,6 +25,9 @@ public class Main {
         System.out.println("Enter the output path: ");
         outPath = scanner.nextLine();
 
+        if (outPath.substring(outPath.length() - 1) != "/"){
+            outPath += "/";
+        }
         try {
             //Read file line by line
             reader = new BufferedReader(new FileReader(path));
@@ -143,9 +146,8 @@ public class Main {
             }
             writer.close();
             reader.close();
-
             if (count > 0){
-                System.out.println("Temporary file created");
+                System.out.println("\nTemporary file created");
             }
 
         } catch (IOException e) {
@@ -186,6 +188,8 @@ public class Main {
                     System.out.println("Temporary file removed.");
                 }
                 System.out.println("Duplicates removed.");
+                System.out.println("\nYou can find your fixed denials under " + outPath + "output.txt");
+                System.out.println("\nTool by @Dexer125");
             }
             catch (IOException e){
                 e.printStackTrace();
