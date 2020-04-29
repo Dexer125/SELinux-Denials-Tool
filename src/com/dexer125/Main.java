@@ -16,14 +16,30 @@ public class Main {
         String tcontext;
         String tclass;
         String output;
+        String filename;
+        String answer;
+        int fileNameIndex;
         int count = 0;
 
         //Ask for paths
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the path to log file: ");
         path = scanner.nextLine();
-        System.out.println("Enter the output path: ");
-        outPath = scanner.nextLine();
+        System.out.println("Would you like to save output into same path? y/n");
+        answer = scanner.nextLine();
+        if (answer.equals("y")){
+            fileNameIndex = path.lastIndexOf("/");
+            filename = path.substring(fileNameIndex+1, path.length());
+            outPath = path.replace(filename, "");
+        }
+        else if (answer.equals("n")){
+            System.out.println("Enter the output path: ");
+            outPath = scanner.nextLine();
+        }
+        else {
+            System.out.println("Wrong answer.");
+           return;
+        }
 
         // Make sure that "/" is always at the end of the path
         if (!outPath.endsWith("/")){
@@ -46,8 +62,6 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println(output);
-
                     writer.write(output);
                     count++;
                     writer.newLine();
@@ -63,8 +77,6 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println(output);
-
                     writer.write(output);
                     count++;
                     writer.newLine();
@@ -79,8 +91,6 @@ public class Main {
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
 
-                    System.out.println(output);
-
                     writer.write(output);
                     count++;
                     writer.newLine();
@@ -93,8 +103,6 @@ public class Main {
                     tcontext = line.substring(line.indexOf("tcontext=u:object_r:")+20, line.indexOf(":s0 tclass"));
                     tclass = line.substring(line.indexOf("tclass=")+7, line.indexOf("permissive"));
                     output = "allow " + scontext + " " + tcontext + ":" + tclass + command + ";";
-
-                    System.out.println(output);
 
                     writer.write(output);
                     count++;
@@ -114,7 +122,6 @@ public class Main {
                         output = output.replace(output.substring(output.indexOf(":s0:"), output.indexOf(";")+1), "");
                         output = output + ":" + tclass + command + ";";
                     }
-                    System.out.println(output);
 
                     writer.write(output);
                     count++;
@@ -133,7 +140,6 @@ public class Main {
                         output = output.replace(output.substring(output.indexOf(":s0:"), output.indexOf(";")+1), "");
                         output = output + ":" + tclass + command + ";";
                     }
-                    System.out.println(output);
 
                     writer.write(output);
                     count++;
@@ -155,10 +161,12 @@ public class Main {
         if (count == 0){
             System.out.println("No denials in log file, check if your kernel supports audit logging.");
             File tempFile = new File(outPath + "outputTemp.txt");
-            if (tempFile.delete()){System.out.println("No files created.");}
+            if (tempFile.delete()){
+                System.out.println("No files created.");
+            }
         }
         else {
-
+            System.out.println("\nResolving denials...");
             System.out.println("\nTemporary file created");
 
             try {
@@ -187,7 +195,9 @@ public class Main {
                     System.out.println("Temporary file removed.");
                 }
                 System.out.println("Duplicates removed.");
-                if (outPath.contains("//")){outPath = outPath.replace("//", "/");}
+                if (outPath.contains("//")){
+                    outPath = outPath.replace("//", "/");
+                }
                 System.out.println("\nYou can find your fixed denials under " + outPath + "output.txt");
                 System.out.println("\nTool by @Dexer125");
             }
