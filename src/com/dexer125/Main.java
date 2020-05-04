@@ -32,13 +32,13 @@ public class Main {
             answer = scanner.nextLine();
             if (answer.equals("y")) {
                 fileNameIndex = path.lastIndexOf("/");
-                filename = path.substring(fileNameIndex + 1, path.length());
+                filename = path.substring(fileNameIndex + 1);
                 outPath = path.replace(filename, "");
             } else if (answer.equals("n")) {
                 System.out.println("Enter the output path: ");
                 outPath = scanner.nextLine();
             } else {
-                System.out.println("Wrong answer.");
+                System.out.println("\nWrong argument. \nEnding script...");
                 return;
             }
 
@@ -203,6 +203,10 @@ public class Main {
                     else if (answer.equals("n")){
                         System.out.println("\nTool by @Dexer125");
                         System.out.println("\nEnding script...");
+                    }
+                    else {
+                        System.out.println("\nWrong argument.\nEnding script...");
+                        return;
                     }
 
                 } catch (IOException e) {
