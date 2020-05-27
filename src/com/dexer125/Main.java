@@ -170,6 +170,7 @@ public class Main {
             else {
                 System.out.println("\nResolving denials...");
                 System.out.println("\nTemporary file created");
+                }
 
                 RemoveDuplicates(outPath, outpuTxt);
 
@@ -178,8 +179,15 @@ public class Main {
 
                 if (answer.equals("y")) {
                     i++;
-                    outpuTxt.deleteCharAt(outpuTxt.length() - 1);
-                    outpuTxt.append(i);
+
+                    if (outpuTxt.toString().equals("output")){ // toString() method is needed because you cant compare StringBuilder and String objects
+                        outpuTxt.append(i);
+                    }
+                    if (!outpuTxt.toString().equals("output")){
+                        outpuTxt.setLength(outpuTxt.length()-1); // This will delete last character of StringBuilder by setting it to length()-1
+                        outpuTxt.append(i);
+                    }
+
                 }
                 else if (answer.equals("n")) {
                     System.out.println("\nTool by @Dexer125");
@@ -197,7 +205,7 @@ public class Main {
 
 
         }
-    }
+
 
     private static void RemoveDuplicates(String outPath, StringBuilder outpuTxt) throws IOException {
         System.out.println("Removing duplicates...");
