@@ -2,6 +2,8 @@ package com.dexer125;
 
 import java.awt.*;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -24,8 +26,9 @@ public class Main {
         String filename;
         String answer = "y";
         String allow = "allow ";
-        StringBuilder outpuTxt = new StringBuilder("output");
-        int i = 0;
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+        String outputTxt = "resolvedDenials_" + now.format(formatter);
         int fileNameIndex;
         int count = 0;
 
@@ -172,27 +175,21 @@ public class Main {
                 System.out.println("\nTemporary file created");
                 }
 
-                RemoveDuplicates(outPath, outpuTxt);
+                RemoveDuplicates(outPath, outputTxt);
 
                 System.out.println("\nWould you like to open another log? y/n");
                 answer = scanner.nextLine();
 
                 if (answer.equals("y")) {
-                    i++;
-
-                    if (outpuTxt.toString().equals("output")){ // toString() method is needed because you cant compare StringBuilder and String objects
-                        outpuTxt.append(i);
-                    }
-                    if (!outpuTxt.toString().equals("output")){
-                        outpuTxt.setLength(outpuTxt.length()-1); // This will delete last character of StringBuilder by setting it to length()-1
-                        outpuTxt.append(i);
-                    }
+                    now = LocalDateTime.now();
+                    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+                    outputTxt = "resolvedDenials_" + now.format(formatter);
 
                 }
                 else if (answer.equals("n")) {
                     System.out.println("\nTool by @Dexer125");
                     System.out.println("\nOpening output file...");
-                    OpenFile(outPath, outpuTxt);
+                    OpenFile(outPath, outputTxt);
                     System.out.println("\nEnding script...");
                 }
                 else{
@@ -207,7 +204,7 @@ public class Main {
         }
 
 
-    private static void RemoveDuplicates(String outPath, StringBuilder outpuTxt) throws IOException {
+    private static void RemoveDuplicates(String outPath, String outpuTxt) throws IOException {
         System.out.println("Removing duplicates...");
         PrintWriter printWriter = new PrintWriter(outPath + outpuTxt + ".txt");
         BufferedReader bufferedReader = new BufferedReader(new FileReader(outPath + "outputTemp.txt"));
@@ -238,7 +235,7 @@ public class Main {
         System.out.println("\nYou can find your fixed denials under " + outPath + outpuTxt + ".txt");
     }
 
-    private static void OpenFile(String outpath, StringBuilder outputTxt) throws IOException {
+    private static void OpenFile(String outpath, String outputTxt) throws IOException {
         File file = new File(outpath + outputTxt +".txt");
         Desktop desktop = Desktop.getDesktop();
         desktop.open(file);
