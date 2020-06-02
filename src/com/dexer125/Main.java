@@ -1,5 +1,8 @@
 package com.dexer125;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.*;
 import java.time.LocalDateTime;
@@ -16,7 +19,7 @@ public class Main {
     private static void ReadDenialsFromFile() throws IOException {
         //Initialize values
         BufferedReader reader;
-        String path;
+        String path = "";
         String outPath;
         String command;
         String scontext;
@@ -35,8 +38,26 @@ public class Main {
         while (answer.equals("y")) {
             //Ask for paths
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter the path to log file: ");
-            path = scanner.nextLine();
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            jfc.setDialogTitle("Select a text file");
+            jfc.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
+            jfc.addChoosableFileFilter(filter);
+
+            int returnValue = jfc.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                path = jfc.getSelectedFile().getPath();
+            }else if (returnValue == JFileChooser.CANCEL_OPTION){
+                System.out.println("\nNo file selected, ending script...");
+                System.out.println("\nTool by @Dexer125");
+                return;
+            }
+
             System.out.println("Would you like to save output into same path? y/n");
             answer = scanner.nextLine();
             if (answer.equals("y")) {
@@ -203,7 +224,6 @@ public class Main {
 
         }
 
-
     private static void RemoveDuplicates(String outPath, String outpuTxt) throws IOException {
         System.out.println("Removing duplicates...");
         PrintWriter printWriter = new PrintWriter(outPath + outpuTxt + ".txt");
@@ -236,6 +256,7 @@ public class Main {
     }
 
     private static void OpenFile(String outpath, String outputTxt) throws IOException {
+
         File file = new File(outpath + outputTxt +".txt");
         Desktop desktop = Desktop.getDesktop();
         desktop.open(file);
