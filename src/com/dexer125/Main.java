@@ -32,14 +32,15 @@ public class Main {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
         String outputTxt = "resolvedDenials_" + now.format(formatter);
+        Scanner scanner = new Scanner(System.in);
         int fileNameIndex;
         int count = 0;
 
         while (answer.equals("y")) {
-            //Ask for paths
-            Scanner scanner = new Scanner(System.in);
+            //File Chooser
+
             try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); //Default system look of FileChooser
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
@@ -50,9 +51,10 @@ public class Main {
             jfc.addChoosableFileFilter(filter);
 
             int returnValue = jfc.showOpenDialog(null);
+
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 path = jfc.getSelectedFile().getPath();
-            }else if (returnValue == JFileChooser.CANCEL_OPTION){
+            } else if (returnValue == JFileChooser.CANCEL_OPTION){
                 System.out.println("\nNo file selected, ending script...");
                 System.out.println("\nTool by @Dexer125");
                 return;
